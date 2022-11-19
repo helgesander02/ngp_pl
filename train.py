@@ -19,7 +19,8 @@ from models.networks import NGP
 from models.rendering import render, MAX_SAMPLES
 
 # optimizer, losses
-from apex.optimizers import FusedAdam
+#from apex.optimizers import FusedAdam
+from torch.optim import Adam
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from losses import NeRFLoss
 
@@ -128,10 +129,10 @@ class NeRFSystem(LightningModule):
             if n not in ['dR', 'dT']: net_params += [p]
 
         opts = []
-        self.net_opt = FusedAdam(net_params, self.hparams.lr, eps=1e-15)
+        self.net_opt = Adam(net_params, self.hparams.lr, eps=1e-15)
         opts += [self.net_opt]
         if self.hparams.optimize_ext:
-            opts += [FusedAdam([self.dR, self.dT], 1e-6)] # learning rate is hard-coded
+            opts += [Adam([self.dR, self.dT], 1e-6)] # learning rate is hard-coded
         net_sch = CosineAnnealingLR(self.net_opt,
                                     self.hparams.num_epochs,
                                     self.hparams.lr/30)
@@ -281,9 +282,7 @@ if __name__ == '__main__':
                       save_poses=hparams.optimize_ext)
         torch.save(ckpt_, f'ckpts/{hparams.dataset_name}/{hparams.exp_name}/epoch={hparams.num_epochs-1}_slim.ckpt')
 
-    if (not hparams.no_save_test) and \
-       hparams.dataset_name=='nsvf' and \
-       'Synthetic' in hparams.root_dir: # save video
+    if True: # save video
         imgs = sorted(glob.glob(os.path.join(system.val_dir, '*.png')))
         imageio.mimsave(os.path.join(system.val_dir, 'rgb.mp4'),
                         [imageio.imread(img) for img in imgs[::2]],

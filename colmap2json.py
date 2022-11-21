@@ -315,6 +315,14 @@ if __name__ == "__main__":
 
 	for f in out["frames"]:
 		f["transform_matrix"] = f["transform_matrix"].tolist()
+	
+	reframes = []
+	for i in range(len(out["frames"])):
+  		index = int(out["frames"][i]['file_path'][-8:-4])
+  		reframes.append([index, meta["frames"][i]])
+	reframes = [l[1] for l in sorted(reframes, key = lambda x : x[0])]
+	out["frames"] = reframes
+	
 	print(nframes,"frames")
 	print(f"writing {OUT_PATH}")
 	with open(OUT_PATH, "w") as outfile:

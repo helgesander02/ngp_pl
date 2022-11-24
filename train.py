@@ -287,6 +287,9 @@ if __name__ == '__main__':
         imageio.mimsave(os.path.join(system.val_dir, 'rgb.mp4'),
                         [imageio.imread(img) for img in imgs[::2]],
                         fps=30, macro_block_size=1)
+        mageio.mimsave(os.path.join(system.val_dir, 'rgb.gif'),
+                        [imageio.imread(img) for img in imgs[::2]],
+                        'GIF', duration = 0.1)
         imageio.mimsave(os.path.join(system.val_dir, 'depth.mp4'),
                         [imageio.imread(img) for img in imgs[1::2]],
                         fps=30, macro_block_size=1)

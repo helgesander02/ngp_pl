@@ -57,4 +57,5 @@ if __name__ == "__main__":
 
     if True:
         imageio.mimsave(f'{scene}_traj/rgb.mp4', imgs, fps=5)
+        imageio.mimsave(f'{scene}_traj/rgb.gif', imgs, duration = 0.1)
         imageio.mimsave(f'{scene}_traj/depth.mp4', depths, fps=5)
